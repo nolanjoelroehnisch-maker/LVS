@@ -7,5 +7,7 @@
         public int LagerplatzId { get; set; }
         public int Menge { get; set; }
 
+        public Artikel? Artikel { get; set; }
+        public Lagerplatz? Lagerplatz { get; set; }
     }
 }

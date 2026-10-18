@@ -14,5 +14,6 @@
 
         public Lager? Lager { get; set; }
 
+        public ICollection<LagerplatzBestand> LagerplatzBestaende { get; set; } = new List<LagerplatzBestand>();
     }
 }

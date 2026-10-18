@@ -6,5 +6,7 @@
         public int VerdichtungId { get; set; }
         public int ArtikelId { get; set; }
         public int Menge { get; set; }
+        public Verdichtung? Verdichtung { get; set; }
+        public Artikel? Artikel { get; set; }
     }
 }
