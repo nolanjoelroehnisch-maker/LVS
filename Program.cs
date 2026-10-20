@@ -9,7 +9,7 @@ namespace LVS
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<LvsDbContext>(
+            builder.Services.AddDbContext<WarehouseDbContext>(
                 options => options.UseSqlite("Data Source=Lvs.db"));
 
             // Add services to the container.

@@ -5,16 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LVS.Services
 {
-    public class ArtikelService
+    public class ArticleService
     {
-        private readonly LvsDbContext _context;
+        private readonly WarehouseDbContext _context;
 
-        public ArtikelService(LvsDbContext context)
+        public ArticleService(WarehouseDbContext context)
         {
             _context = context;
-        }
-
-        
         }
     }
 }
