@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LVS.Migrations
 {
     [DbContext(typeof(LvsDbContext))]
-    [Migration("20261018182536_UniqueArtikelLagerplatz")]
+    [Migration("20261020171429_UniqueArtikelLagerplatz")]
     partial class UniqueArtikelLagerplatz
     {
         /// <inheritdoc />
@@ -206,9 +206,10 @@ namespace LVS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArtikelId");
-
                     b.HasIndex("LagerplatzId");
+
+                    b.HasIndex("ArtikelId", "LagerplatzId")
+                        .IsUnique();
 
                     b.ToTable("LagerplatzBestaende");
                 });

@@ -88,6 +88,10 @@ namespace LVS.Data
                 .HasOne(p => p.Artikel)
                 .WithMany()
                 .HasForeignKey(p => p.ArtikelId);
+
+            modelBuilder.Entity<LagerplatzBestand>()
+                .HasIndex(b => new { b.ArtikelId, b.LagerplatzId })
+                .IsUnique();
         }
 
     }

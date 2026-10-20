@@ -203,9 +203,10 @@ namespace LVS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArtikelId");
-
                     b.HasIndex("LagerplatzId");
+
+                    b.HasIndex("ArtikelId", "LagerplatzId")
+                        .IsUnique();
 
                     b.ToTable("LagerplatzBestaende");
                 });

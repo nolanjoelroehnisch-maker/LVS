@@ -3,7 +3,7 @@
     public class Artikel
     {
         public int Id { get; set; }
-        public int Artikelnummer { get; set; }
+        public string Artikelnummer { get; set; } = "";
         public string Artikelbezeichnung { get; set; } = "";
         public string Einheit { get; set; } = "";
         public int Bestand { get; set; }
