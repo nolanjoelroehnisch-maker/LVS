@@ -11,16 +11,16 @@ namespace LVS.Data
 
         }
 
-        public DbSet<Article> Article { get; set; }
-        public DbSet<User> User { get; set; }
-        public DbSet<Warehouse> Warehouse { get; set; }
-        public DbSet<StorageLocation> StorageLocations { get; set; }
-        public DbSet<LocationStock> LocationStocks { get; set; }
-        public DbSet<StockMovement> StockMovements { get; set; }
-        public DbSet<GoodsReceipt> GoodsReceipts { get; set; }
-        public DbSet<GoodsIssue> GoodsIssues { get; set; }
-        public DbSet<Consolidation> Consolidations { get; set; }
-        public DbSet<ConsolidationPosition> ConsolidationPositions { get; set; }
+        public DbSet<Article> Articles { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Warehouse> Warehouses { get; set; } = null!;
+        public DbSet<StorageLocation> StorageLocations { get; set; } = null!;
+        public DbSet<LocationStock> LocationStocks { get; set; } = null!;
+        public DbSet<StockMovement> StockMovements { get; set; } = null!;
+        public DbSet<GoodsReceipt> GoodsReceipts { get; set; } = null!;
+        public DbSet<GoodsIssue> GoodsIssues { get; set; } = null!;
+        public DbSet<Consolidation> Consolidations { get; set; } = null!;
+        public DbSet<ConsolidationPosition> ConsolidationPositions { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
