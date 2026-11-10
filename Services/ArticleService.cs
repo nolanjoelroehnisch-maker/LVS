@@ -23,7 +23,15 @@ namespace LVS.Services
 
         public async Task<Article?> GetByIdAsync(int id)
         {
+            Article? article = await _context.Articles.FindAsync(id);  
             
+            return article;
+        }
+
+        public async Task<List<Article>> SearchAsync(string searchTerm)
+        {
+            return await _context.Articles.Where(a => a.ArticleNumber.Contains(searchTerm) || a.ArticleName.Contains(searchTerm)).ToListAsync();
+
         }
     }
 }
