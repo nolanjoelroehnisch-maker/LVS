@@ -27,14 +27,14 @@ namespace LVS.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // StorageLocation gehört zu einem Warehouse
+            // Configure the relationship between StorageLocation and Warehouse
             modelBuilder.Entity<StorageLocation>()
                 .HasOne(lp => lp.Warehouse)
                 .WithMany(l => l.StorageLocations)
                 .HasForeignKey(lp => lp.WarehouseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Articlebestand pro StorageLocation
+            // Configure the relationship between Article and LocationStock
             modelBuilder.Entity<LocationStock>()
                 .HasOne(b => b.Article)
                 .WithMany(a => a.LocationStocks)
@@ -78,7 +78,7 @@ namespace LVS.Data
                 .WithMany()
                 .HasForeignKey(b => b.StorageLocationId);
 
-            // Consolidationsposition
+            // ConsolidationPosition relationships
             modelBuilder.Entity<ConsolidationPosition>()
                 .HasOne(p => p.Consolidation)
                 .WithMany(v => v.Positions)
