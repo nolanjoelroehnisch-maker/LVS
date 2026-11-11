@@ -40,7 +40,7 @@ namespace LVS.Services
             return article;
         }
 
-        public async Task<bool> DeleteAsyc(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
 
             Article? article = await GetByIdAsync(id);
@@ -54,7 +54,8 @@ namespace LVS.Services
             return true;
         }
          
-        public async Task<bool> UpdateAsync(Article article)
+        public async Task<bool> UpdateAsync(Article article) /*Inventory levels should not simply be modified via `UpdateAsync()` 
+                                                              * Instead dedicated methods such as `ReceiveGoodsAsync()` or `IssueGoodsAsync()` should be used for this purpose.*/
         {
             Article? existingArticle = await GetByIdAsync(article.Id);
             if (existingArticle == null)
