@@ -1,6 +1,7 @@
 using LVS.Components;
 using Microsoft.EntityFrameworkCore;
 using LVS.Data;
+using LVS.Services;
 
 namespace LVS
 {
@@ -15,6 +16,7 @@ namespace LVS
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddScoped<ArticleService>();
 
             var app = builder.Build();
 

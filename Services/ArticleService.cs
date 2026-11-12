@@ -9,7 +9,7 @@ namespace LVS.Services
     {
         private readonly WarehouseDbContext _context;
 
-        public List<Article> Articles { get; private set; }
+        
 
         public ArticleService(WarehouseDbContext context)
         {

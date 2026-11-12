@@ -15,7 +15,7 @@ namespace LVS.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
 
             modelBuilder.Entity("LVS.Models.Article", b =>
                 {
@@ -46,7 +46,7 @@ namespace LVS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Article");
+                    b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("LVS.Models.Consolidation", b =>
@@ -276,7 +276,7 @@ namespace LVS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("LVS.Models.Warehouse", b =>
@@ -299,7 +299,7 @@ namespace LVS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Warehouse");
+                    b.ToTable("Warehouses");
                 });
 
             modelBuilder.Entity("LVS.Models.ConsolidationPosition", b =>
