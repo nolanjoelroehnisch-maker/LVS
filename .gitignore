@@ -1,4 +1,3 @@
-
 bin/
 obj/
 .vs/
@@ -8,3 +7,6 @@ obj/
 *.db-shm
 *.db-wal
 *.Backup.tmp
+
+# Import files
+Import/*.csv

@@ -2,6 +2,8 @@
 using LVS.Data;
 using LVS.Models;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper;
+using System.IO;
 
 namespace LVS.Services
 {
@@ -55,7 +57,7 @@ namespace LVS.Services
         }
          
         public async Task<bool> UpdateAsync(Article article) /*Inventory levels should not simply be modified via `UpdateAsync()` 
-                                                              * Instead dedicated methods such as `ReceiveGoodsAsync()` or `IssueGoodsAsync()` should be used for this purpose.*/
+                                                               Instead dedicated methods such as `ReceiveGoodsAsync()` or `IssueGoodsAsync()` should be used for this purpose.*/
         {
             Article? existingArticle = await GetByIdAsync(article.Id);
             if (existingArticle == null)
@@ -68,12 +70,52 @@ namespace LVS.Services
             existingArticle.TotalStock = article.TotalStock;
             existingArticle.MinimumStock = article.MinimumStock;
             existingArticle.MaximumStock = article.MaximumStock;
+            existingArticle.Brand = article.Brand;
+            existingArticle.EAN = article.EAN;
 
             //_context.Articles.Update(existingArticle); Maybe not needed as the entity is already being tracked by the context
             await _context.SaveChangesAsync();
             return true;
+
+
         }
 
+        public async Task<List<Article>> ImportFromCsvAsync(Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            var options = new CsvReaderOptions
+            {
+                Separator = ';'
+            };
+            using var csv = CsvReader.Create(reader, options);
+
+            var existingNumbers = await _context.Articles
+            .Select(a => a.ArticleNumber)
+            .ToHashSetAsync();
+
+            var articles = new List<Article>();
+
+            await foreach (var article in csv.GetRecordsAsync<Article>())
+            {
+                article.ArticleNumber = article.ArticleNumber.Trim();
+
+                if (existingNumbers.Add(article.ArticleNumber))
+                {
+                    articles.Add(article);
+                }
+            }
+
+            if (articles.Count == 0)
+            {
+                return articles;
+            }
+
+            _context.Articles.AddRange(articles);
+            await _context.SaveChangesAsync();
+            return articles;
+        }
+           
+        
     }
 }
   

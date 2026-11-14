@@ -1,0 +1,85 @@
+﻿@page "/articles"
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+@using LVS.Models
+@using LVS.Services
+@using Microsoft.AspNetCore.Components.Forms
+
+
+@inject ArticleService ArticleService
+
+
+<h3>Articles</h3>
+
+
+<InputFile OnChange="ImportArticles" accept=".csv" />
+
+
+@if (!string.IsNullOrEmpty(importMessage))
+{
+    <p>@importMessage</p>
+}
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Article Number</th>
+            <th>Article Name</th>
+            <th>Brand</th>
+            <th>EAN</th>
+            <th>Unit</th>
+            <th>Total Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var article in articles)
+        {
+            <tr>
+                <td>@article.ArticleNumber</td>
+                <td>@article.ArticleName</td>
+                <td>@article.Brand</td>
+                <td>@article.EAN</td>
+                <td>@article.Unit</td>
+                <td>@article.TotalStock</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    private List<Article> articles = new();
+    private string importMessage = "";
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        articles = await ArticleService.GetAllAsync();
+    }
+
+
+
+    private async Task ImportArticles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+
+            await using var stream = file.OpenReadStream(
+                maxAllowedSize: 10 * 1024 * 1024);
+
+            var imported = await ArticleService.ImportFromCsvAsync(stream);
+
+            articles = await ArticleService.GetAllAsync();
+
+            importMessage = $"{imported.Count} Article(s) imported successfully.";
+        }
+        catch (Exception ex)
+        {
+            importMessage = $"Import error: {ex.Message}";
+        }
+    }
+}

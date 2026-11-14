@@ -12,7 +12,7 @@ namespace LVS.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Article",
+                name: "Articles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -22,11 +22,13 @@ namespace LVS.Migrations
                     Unit = table.Column<string>(type: "TEXT", nullable: false),
                     TotalStock = table.Column<int>(type: "INTEGER", nullable: false),
                     MinimumStock = table.Column<int>(type: "INTEGER", nullable: false),
-                    MaximumStock = table.Column<int>(type: "INTEGER", nullable: false)
+                    MaximumStock = table.Column<int>(type: "INTEGER", nullable: false),
+                    Brand = table.Column<string>(type: "TEXT", nullable: false),
+                    EAN = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Article", x => x.Id);
+                    table.PrimaryKey("PK_Articles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +45,7 @@ namespace LVS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -63,11 +65,11 @@ namespace LVS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Warehouse",
+                name: "Warehouses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -78,7 +80,7 @@ namespace LVS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Warehouse", x => x.Id);
+                    table.PrimaryKey("PK_Warehouses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,9 +97,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_ConsolidationPositions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConsolidationPositions_Article_ArticleId",
+                        name: "FK_ConsolidationPositions_Articles_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -123,9 +125,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_StorageLocations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StorageLocations_Warehouse_WarehouseId",
+                        name: "FK_StorageLocations_Warehouses_WarehouseId",
                         column: x => x.WarehouseId,
-                        principalTable: "Warehouse",
+                        principalTable: "Warehouses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -145,9 +147,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_GoodsIssues", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GoodsIssues_Article_ArticleId",
+                        name: "FK_GoodsIssues_Articles_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -172,9 +174,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_GoodsReceipts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GoodsReceipts_Article_ArticleId",
+                        name: "FK_GoodsReceipts_Articles_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -199,9 +201,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_LocationStocks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LocationStocks_Article_ArticleId",
+                        name: "FK_LocationStocks_Articles_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -228,9 +230,9 @@ namespace LVS.Migrations
                 {
                     table.PrimaryKey("PK_StockMovements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StockMovements_Article_ArticleId",
+                        name: "FK_StockMovements_Articles_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -317,19 +319,19 @@ namespace LVS.Migrations
                 name: "StockMovements");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Consolidations");
 
             migrationBuilder.DropTable(
-                name: "Article");
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "StorageLocations");
 
             migrationBuilder.DropTable(
-                name: "Warehouse");
+                name: "Warehouses");
         }
     }
 }

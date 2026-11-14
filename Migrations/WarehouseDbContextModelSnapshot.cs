@@ -15,7 +15,7 @@ namespace LVS.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
             modelBuilder.Entity("LVS.Models.Article", b =>
                 {
@@ -28,6 +28,14 @@ namespace LVS.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ArticleNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EAN")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
