@@ -1,85 +1,562 @@
-﻿@page "/articles"
+﻿/*
+ * UI Design and Styling:
+ * The HTML/Razor markup structure and CSS styling were
+ * generated with AI assistance.
+ * The implementation was reviewed and integrated by me.
+ */
+
+
+@page "/articles"
 @rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
 @using LVS.Models
 @using LVS.Services
-@using Microsoft.AspNetCore.Components.Forms
-
-
 @inject ArticleService ArticleService
+@inject IJSRuntime JS
 
+<div class="lvs-page">
 
-<h3>Articles</h3>
+    <div class="topbar">
+        <div class="brand">LVS <span>WAREHOUSE MANAGEMENT</span></div>
+        <nav>
+            <a class="nav-active" href="/articles">Articles</a>
+            <a href="/warehouse">Warehouse</a>
+            <a href="/storage-locations">Storage Locations</a>
+            <a href="/system">System</a>
+        </nav>
+        <div class="user-info">Administration</div>
+    </div>
 
+    <div class="page-heading">
+        <div>
+            <h2>Article Master Data</h2>
+            <span>Article overview and inventory information</span>
+        </div>
+        <div class="article-count">
+            Articles: <strong>@articles.Count</strong>
+        </div>
+    </div>
 
-<InputFile OnChange="ImportArticles" accept=".csv" />
+    <section class="panel">
+        <div class="panel-heading">
+            <strong>Search / Filter</strong>
+        </div>
 
+        <div class="filter-area">
+            <div class="filter-field">
+                <label>Article number</label>
+                <input @bind="searchNumber" @bind:event="oninput"
+                       placeholder="Article number..." />
+            </div>
 
-@if (!string.IsNullOrEmpty(importMessage))
-{
-    <p>@importMessage</p>
-}
+            <div class="filter-field">
+                <label>Article description</label>
+                <input @bind="searchName" @bind:event="oninput"
+                       placeholder="Article name..." />
+            </div>
 
+            <div class="filter-field">
+                <label>Brand</label>
+                <input @bind="searchBrand" @bind:event="oninput"
+                       placeholder="Brand..." />
+            </div>
 
+            <div class="filter-field">
+                <label>EAN</label>
+                <input @bind="searchEAN" @bind:event="oninput"
+                       placeholder="EAN..." />
+            </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Article Number</th>
-            <th>Article Name</th>
-            <th>Brand</th>
-            <th>EAN</th>
-            <th>Unit</th>
-            <th>Total Stock</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var article in articles)
-        {
-            <tr>
-                <td>@article.ArticleNumber</td>
-                <td>@article.ArticleName</td>
-                <td>@article.Brand</td>
-                <td>@article.EAN</td>
-                <td>@article.Unit</td>
-                <td>@article.TotalStock</td>
-            </tr>
+            <div class="filter-field">
+                <label>Stock status</label>
+                <select @bind="stockFilter">
+                    <option value="All">All</option>
+                    <option value="Low">Low stock</option>
+                    <option value="Available">Available</option>
+                </select>
+            </div>
+
+            <button class="secondary-button" @onclick="ResetFilters">
+                Reset
+            </button>
+        </div>
+    </section>
+
+    <section class="panel table-panel">
+        <div class="panel-heading table-heading">
+            <strong>Article Overview</strong>
+            <span>@FilteredArticles.Count() entries</span>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Article No.</th>
+                        <th>Article Description</th>
+                        <th>Brand</th>
+                        <th>EAN</th>
+                        <th>Unit</th>
+                        <th>Total Stock</th>
+                        <th>Min. Stock</th>
+                        <th>Max. Stock</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var article in FilteredArticles)
+                    {
+                        <tr class="@(selectedArticle?.Id == article.Id ? "selected-row" : "")"
+                            @key="article.Id"
+                            @onclick="() => SelectArticle(article)">
+
+                            <td>@article.ArticleNumber</td>
+                            <td class="article-name">@article.ArticleName</td>
+                            <td>@article.Brand</td>
+                            <td>@article.EAN</td>
+                            <td>@article.Unit</td>
+                            <td class="number-cell">@article.TotalStock</td>
+                            <td class="number-cell">@article.MinimumStock</td>
+                            <td class="number-cell">@article.MaximumStock</td>
+
+                            <td>
+                                @if (article.TotalStock <= article.MinimumStock)
+                                {
+                                    <span class="status status-low">Low stock</span>
+                                }
+                                else
+                                {
+                                    <span class="status status-ok">Available</span>
+                                }
+                            </td>
+
+                            <td>
+                                <button class="delete-button"
+                                        title="Delete article"
+                                        @onclick="() => DeleteArticle(article)"
+                                        @onclick:stopPropagation="true">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!FilteredArticles.Any())
+            {
+                <div class="empty-state">
+                    No articles found.
+                </div>
+            }
+        </div>
+    </section>
+
+    @if (selectedArticle != null)
+    {
+        <section class="panel detail-panel">
+            <div class="panel-heading">
+                <strong>Article Details</strong>
+                <span>Selected article: @selectedArticle.ArticleNumber</span>
+            </div>
+
+            <div class="detail-content">
+                <div class="detail-group">
+                    <h4>Basic Data</h4>
+                    <div><label>Article number</label><strong>@selectedArticle.ArticleNumber</strong></div>
+                    <div><label>Description</label><strong>@selectedArticle.ArticleName</strong></div>
+                    <div><label>Brand</label><strong>@selectedArticle.Brand</strong></div>
+                    <div><label>EAN</label><strong>@selectedArticle.EAN</strong></div>
+                </div>
+
+                <div class="detail-group">
+                    <h4>Inventory Data</h4>
+                    <div><label>Total stock</label><strong>@selectedArticle.TotalStock @selectedArticle.Unit</strong></div>
+                    <div><label>Minimum stock</label><strong>@selectedArticle.MinimumStock</strong></div>
+                    <div><label>Maximum stock</label><strong>@selectedArticle.MaximumStock</strong></div>
+                    <div><label>Unit</label><strong>@selectedArticle.Unit</strong></div>
+                </div>
+            </div>
+        </section>
+    }
+
+    <div class="footer">
+        LVS Warehouse Management System
+        <span>Article Management</span>
+    </div>
+
+</div>
+
+<style>
+    .lvs-page {
+        color: #202c3c;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        background: #e9edf3;
+        min-height: 100vh;
+        padding-bottom: 15px;
         }
-    </tbody>
-</table>
 
+    .topbar {
+        background: linear-gradient(#f9fbfd, #dce4ef);
+        border-bottom: 3px solid #e5c900;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        gap: 35px;
+        padding: 0 20px;
+        box-shadow: 0 1px 4px #9ba9ba;
+        }
 
+    .brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: #174d88;
+        white-space: nowrap;
+        }
+
+    .brand span {
+        font-size: 9px;
+        color: #66758a;
+        display: block;
+        letter-spacing: 1px;
+        }
+
+    .topbar nav {
+        display: flex;
+        align-self: stretch;
+        gap: 4px;
+        }
+
+    .topbar nav a {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        color: #26374b;
+        text-decoration: none;
+        border-bottom: 3px solid transparent;
+        }
+
+    .topbar nav a:hover,
+    .topbar nav .nav-active {
+        background: #e8eef7;
+        color: #064c9b;
+        border-bottom-color: #1767b2;
+        }
+
+    .user-info {
+        margin-left: auto;
+        color: #4b5c70;
+        font-weight: bold;
+        }
+
+    .page-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 17px 15px;
+        }
+
+    .page-heading h2 {
+        font-size: 19px;
+        margin: 0 0 5px;
+        color: #17477c;
+        }
+
+    .page-heading span {
+        color: #718096;
+        font-size: 12px;
+        }
+
+    .article-count {
+        color: #526276;
+        background: #f8fafc;
+        border: 1px solid #c6d0dd;
+        padding: 9px 15px;
+        }
+
+    .panel {
+        margin: 0 16px 13px;
+        background: #f8fafc;
+        border: 1px solid #b8c5d5;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px #cbd3df;
+        }
+
+    .panel-heading {
+        background: linear-gradient(#e8eef7, #d1ddec);
+        border-bottom: 1px solid #b9c6d7;
+        padding: 10px 15px;
+        color: #173e70;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+    .filter-area {
+        padding: 17px 14px;
+        display: flex;
+        align-items: end;
+        flex-wrap: wrap;
+        gap: 14px;
+        }
+
+    .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        min-width: 145px;
+        }
+
+    .filter-field label,
+    .detail-group label {
+        font-weight: bold;
+        color: #35465b;
+        }
+
+    .filter-field input,
+    .filter-field select {
+        height: 31px;
+        border: 1px solid #aebac9;
+        border-radius: 3px;
+        background: white;
+        padding: 0 8px;
+        color: #26374b;
+        min-width: 0;
+        }
+
+    .filter-field input:focus,
+    .filter-field select:focus {
+        outline: 1px solid #397dbb;
+        border-color: #397dbb;
+        }
+
+    .secondary-button,
+    .delete-button {
+        border: 1px solid #aebac9;
+        border-radius: 3px;
+        background: linear-gradient(white, #e4eaf2);
+        color: #26374b;
+        padding: 7px 15px;
+        cursor: pointer;
+        height: 31px;
+        }
+
+    .secondary-button:hover {
+        background: #dce8f6;
+        }
+
+    .table-wrapper {
+        overflow-x: auto;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        white-space: nowrap;
+        font-size: 12px;
+        }
+
+    thead {
+        background: linear-gradient(#f1f4f8, #dfe6ef);
+        }
+
+    th {
+        text-align: left;
+        padding: 10px 9px;
+        border: 1px solid #c7d0dc;
+        color: #26374b;
+        }
+
+    td {
+        padding: 8px 9px;
+        border: 1px solid #d4dce6;
+        color: #26374b;
+        }
+
+    tbody tr {
+        background: #fff;
+        cursor: pointer;
+        }
+
+    tbody tr:nth-child(even) {
+        background: #f1f5fa;
+        }
+
+    tbody tr:hover {
+        background: #e0edfb;
+        }
+
+    tbody tr.selected-row {
+        background: #c9def5;
+        }
+
+    .article-name {
+        font-weight: 600;
+        }
+
+    .number-cell {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        }
+
+    .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        }
+
+    .status-ok {
+        background: #d8edda;
+        color: #276337;
+        border: 1px solid #b5d9b9;
+        }
+
+    .status-low {
+        background: #fff0cf;
+        color: #8b5b00;
+        border: 1px solid #ecd49e;
+        }
+
+    .delete-button {
+        height: auto;
+        padding: 5px 9px;
+        color: #9b3030;
+        background: #fff;
+        }
+
+    .delete-button:hover {
+        background: #fce6e6;
+        border-color: #c87878;
+        }
+
+    .empty-state {
+        padding: 25px;
+        text-align: center;
+        color: #758397;
+        }
+
+    .detail-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 15px;
+        }
+
+    .detail-group {
+        border: 1px solid #cbd4df;
+        background: white;
+        }
+
+    .detail-group h4 {
+        margin: 0;
+        padding: 9px 12px;
+        color: #17477c;
+        background: #e8eef7;
+        border-bottom: 1px solid #cbd4df;
+        }
+
+    .detail-group div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 12px;
+        border-bottom: 1px solid #edf0f4;
+        }
+
+    .detail-group strong {
+        text-align: right;
+        overflow-wrap: anywhere;
+        }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        color: #8491a1;
+        padding: 8px 18px;
+        font-size: 11px;
+        }
+        
+
+    @@Media (max-width: 800px) {
+        .topbar {
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .topbar nav {
+            flex-wrap: wrap;
+        }
+
+        .detail-content {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 
 @code {
     private List<Article> articles = new();
-    private string importMessage = "";
+    private Article? selectedArticle;
 
+    private string searchNumber = "";
+    private string searchName = "";
+    private string searchBrand = "";
+    private string searchEAN = "";
+    private string stockFilter = "All";
 
+    private IEnumerable<Article> FilteredArticles =>
+        articles.Where(a =>
+            a.ArticleNumber.Contains(searchNumber, StringComparison.OrdinalIgnoreCase) &&
+            a.ArticleName.Contains(searchName, StringComparison.OrdinalIgnoreCase) &&
+            a.Brand.Contains(searchBrand, StringComparison.OrdinalIgnoreCase) &&
+            a.EAN.Contains(searchEAN, StringComparison.OrdinalIgnoreCase) &&
+            (stockFilter == "All" ||
+             (stockFilter == "Low" && a.TotalStock <= a.MinimumStock) ||
+             (stockFilter == "Available" && a.TotalStock > a.MinimumStock)));
 
     protected override async Task OnInitializedAsync()
     {
         articles = await ArticleService.GetAllAsync();
     }
 
-
-
-    private async Task ImportArticles(InputFileChangeEventArgs e)
+    private void SelectArticle(Article article)
     {
-        try
+        selectedArticle = article;
+    }
+
+    private void ResetFilters()
+    {
+        searchNumber = "";
+        searchName = "";
+        searchBrand = "";
+        searchEAN = "";
+        stockFilter = "All";
+    }
+
+    private async Task DeleteArticle(Article article)
+    {
+        var confirmed = await JS.InvokeAsync<bool>(
+            "confirm",
+            $"Do you really want to delete article {article.ArticleNumber}?"
+        );
+
+        if (!confirmed)
+            return;
+
+        var deleted = await ArticleService.DeleteAsync(article.Id);
+
+        if (deleted)
         {
-            var file = e.File;
+            articles.Remove(article);
 
-            await using var stream = file.OpenReadStream(
-                maxAllowedSize: 10 * 1024 * 1024);
-
-            var imported = await ArticleService.ImportFromCsvAsync(stream);
-
-            articles = await ArticleService.GetAllAsync();
-
-            importMessage = $"{imported.Count} Article(s) imported successfully.";
-        }
-        catch (Exception ex)
-        {
-            importMessage = $"Import error: {ex.Message}";
+            if (selectedArticle?.Id == article.Id)
+                selectedArticle = null;
         }
     }
 }
