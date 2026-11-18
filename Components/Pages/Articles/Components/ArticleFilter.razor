@@ -1,0 +1,71 @@
+﻿@*
+    UI Design and Styling:
+    The HTML/Razor markup structure and CSS styling were
+    generated with AI assistance.
+    The implementation was reviewed and integrated by me.
+*@
+
+
+
+<div class="filter-area">
+    <div class="filter-field">
+        <label>Article number</label>
+        <input value="@SearchNumber"
+               @oninput="@(e => SearchNumberChanged.InvokeAsync(e.Value?.ToString() ?? string.Empty))"
+               placeholder="Article number..." />
+    </div>
+
+    <div class="filter-field">
+        <label>Article description</label>
+        <input value="@SearchName"
+               @oninput="@(e => SearchNameChanged.InvokeAsync(e.Value?.ToString() ?? string.Empty))"
+               placeholder="Article name..." />
+    </div>
+
+    <div class="filter-field">
+        <label>Brand</label>
+        <input value="@SearchBrand"
+               @oninput="@(e => SearchBrandChanged.InvokeAsync(e.Value?.ToString() ?? string.Empty))"
+               placeholder="Brand..." />
+    </div>
+
+    <div class="filter-field">
+        <label>EAN</label>
+        <input value="@SearchEAN"
+               @oninput="@(e => SearchEANChanged.InvokeAsync(e.Value?.ToString() ?? string.Empty))"
+               placeholder="EAN..." />
+    </div>
+
+    <div class="filter-field">
+        <label>Stock status</label>
+        <select value="@StockFilter"
+                @onchange="@(e => StockFilterChanged.InvokeAsync(e.Value?.ToString() ?? "All"))">
+            <option value="All">All</option>
+            <option value="Low">Low stock</option>
+            <option value="Available">Available</option>
+        </select>
+    </div>
+
+    <button class="secondary-button" @onclick="OnReset">
+        Reset
+    </button>
+</div>
+
+@code {
+    [Parameter] public string SearchNumber { get; set; } = "";
+    [Parameter] public EventCallback<string> SearchNumberChanged { get; set; }
+
+    [Parameter] public string SearchName { get; set; } = "";
+    [Parameter] public EventCallback<string> SearchNameChanged { get; set; }
+
+    [Parameter] public string SearchBrand { get; set; } = "";
+    [Parameter] public EventCallback<string> SearchBrandChanged { get; set; }
+
+    [Parameter] public string SearchEAN { get; set; } = "";
+    [Parameter] public EventCallback<string> SearchEANChanged { get; set; }
+
+    [Parameter] public string StockFilter { get; set; } = "All";
+    [Parameter] public EventCallback<string> StockFilterChanged { get; set; }
+
+    [Parameter] public EventCallback OnReset { get; set; }
+}

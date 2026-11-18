@@ -1,0 +1,90 @@
+﻿@*
+    UI Design and Styling:
+    The HTML/Razor markup structure and CSS styling were
+    generated with AI assistance.
+    The implementation was reviewed and integrated by me.
+*@
+
+@using LVS.Models
+
+<div class="table-wrapper">
+    <table class="article-table">
+        <thead>
+            <tr>
+                <th>Article No.</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>EAN</th>
+                <th>Unit</th>
+                <th>Total Stock</th>
+                <th>Min Stock</th>
+                <th>Max Stock</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Articles.Any())
+            {
+                @foreach (var article in Articles)
+                {
+                    var isLowStock = article.TotalStock <= article.MinimumStock;
+
+                    <tr class="@(SelectedArticle?.Id == article.Id ? "selected-row" : "")"
+                        @onclick="() => OnSelect.InvokeAsync(article)">
+
+                        <td>@article.ArticleNumber</td>
+                        <td>@article.ArticleName</td>
+                        <td>@article.Brand</td>
+                        <td>@article.EAN</td>
+                        <td>@article.Unit</td>
+                        <td>@article.TotalStock</td>
+                        <td>@article.MinimumStock</td>
+                        <td>@article.MaximumStock</td>
+
+                        <td>
+                            @if (isLowStock)
+                            {
+                                <span class="status-low">Low stock</span>
+                            }
+                            else
+                            {
+                                <span class="status-available">Available</span>
+                            }
+                        </td>
+
+                        <td>
+                            <button class="delete-button"
+                                    @onclick="() => OnDelete.InvokeAsync(article)"
+                                    @onclick:stopPropagation="true">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10" class="empty-state">
+                        No articles found.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<Article> Articles { get; set; } = Enumerable.Empty<Article>();
+
+    [Parameter]
+    public Article? SelectedArticle { get; set; }
+
+    [Parameter]
+    public EventCallback<Article> OnSelect { get; set; }
+
+    [Parameter]
+    public EventCallback<Article> OnDelete { get; set; }
+}

@@ -1,0 +1,66 @@
+﻿@*
+    UI Design and Styling:
+    The HTML/Razor markup structure and CSS styling were
+    generated with AI assistance.
+    The implementation was reviewed and integrated by me.
+*@
+
+@using LVS.Models
+
+@if (SelectedArticle is not null)
+{
+    <div class="details-grid">
+        <div class="detail-section">
+            <h3>Basic Data</h3>
+
+            <div class="detail-row">
+                <span>Article number</span>
+                <strong>@SelectedArticle.ArticleNumber</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Description</span>
+                <strong>@SelectedArticle.ArticleName</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Brand</span>
+                <strong>@SelectedArticle.Brand</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>EAN</span>
+                <strong>@SelectedArticle.EAN</strong>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>Inventory Data</h3>
+
+            <div class="detail-row">
+                <span>Total Stock</span>
+                <strong>@SelectedArticle.TotalStock</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Minimum Stock</span>
+                <strong>@SelectedArticle.MinimumStock</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Maximum Stock</span>
+                <strong>@SelectedArticle.MaximumStock</strong>
+            </div>
+
+            <div class="detail-row">
+                <span>Unit</span>
+                <strong>@SelectedArticle.Unit</strong>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Article? SelectedArticle { get; set; }
+}

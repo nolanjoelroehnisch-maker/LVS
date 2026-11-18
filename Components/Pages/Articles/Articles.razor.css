@@ -1,0 +1,325 @@
+﻿
+/* Main Layout */
+
+.lvs-page {
+    color: #202c3c;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    background: #e9edf3;
+    min-height: 100vh;
+    padding-bottom: 15px;
+}
+
+/* Top Navigation */
+
+.topbar {
+    background: linear-gradient(#f9fbfd, #dce4ef);
+    border-bottom: 3px solid #e5c900;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    padding: 0 20px;
+    box-shadow: 0 1px 4px #9ba9ba;
+}
+
+.brand {
+    font-size: 20px;
+    font-weight: bold;
+    color: #174d88;
+    white-space: nowrap;
+}
+
+    .brand span {
+        font-size: 9px;
+        color: #66758a;
+        display: block;
+        letter-spacing: 1px;
+    }
+
+.topbar nav {
+    display: flex;
+    align-self: stretch;
+    gap: 4px;
+}
+
+    .topbar nav a {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        color: #26374b;
+        text-decoration: none;
+        border-bottom: 3px solid transparent;
+    }
+
+        .topbar nav a:hover,
+        .topbar nav .nav-active {
+            background: #e8eef7;
+            color: #064c9b;
+            border-bottom-color: #1767b2;
+        }
+
+.user-info {
+    margin-left: auto;
+    color: #4b5c70;
+    font-weight: bold;
+}
+
+/* Page Heading */
+
+.page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 17px 15px;
+}
+
+    .page-heading h2 {
+        font-size: 19px;
+        margin: 0 0 5px;
+        color: #17477c;
+    }
+
+    .page-heading span {
+        color: #718096;
+        font-size: 12px;
+    }
+
+.article-count {
+    color: #526276;
+    background: #f8fafc;
+    border: 1px solid #c6d0dd;
+    padding: 9px 15px;
+}
+
+/* Panels */
+
+.panel {
+    margin: 0 16px 13px;
+    background: #f8fafc;
+    border: 1px solid #b8c5d5;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px #cbd3df;
+}
+
+.panel-heading {
+    background: linear-gradient(#e8eef7, #d1ddec);
+    border-bottom: 1px solid #b9c6d7;
+    padding: 10px 15px;
+    color: #173e70;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Filter Component */
+
+.lvs-page ::deep .filter-area {
+    padding: 17px 14px;
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.lvs-page ::deep .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 145px;
+}
+
+    .lvs-page ::deep .filter-field label {
+        font-weight: bold;
+        color: #35465b;
+    }
+
+    .lvs-page ::deep .filter-field input,
+    .lvs-page ::deep .filter-field select {
+        height: 31px;
+        border: 1px solid #aebac9;
+        border-radius: 3px;
+        background: white;
+        padding: 0 8px;
+        color: #26374b;
+        min-width: 0;
+    }
+
+        .lvs-page ::deep .filter-field input:focus,
+        .lvs-page ::deep .filter-field select:focus {
+            outline: 1px solid #397dbb;
+            border-color: #397dbb;
+        }
+
+.lvs-page ::deep .secondary-button {
+    border: 1px solid #aebac9;
+    border-radius: 3px;
+    background: linear-gradient(white, #e4eaf2);
+    color: #26374b;
+    padding: 7px 15px;
+    cursor: pointer;
+    height: 31px;
+}
+
+    .lvs-page ::deep .secondary-button:hover {
+        background: #dce8f6;
+    }
+
+/* Article Table Component */
+
+.lvs-page ::deep .table-wrapper {
+    overflow-x: auto;
+}
+
+.lvs-page ::deep .article-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+    .lvs-page ::deep .article-table thead {
+        background: linear-gradient(#f1f4f8, #dfe6ef);
+    }
+
+    .lvs-page ::deep .article-table th {
+        text-align: left;
+        padding: 10px 9px;
+        border: 1px solid #c7d0dc;
+        color: #26374b;
+    }
+
+    .lvs-page ::deep .article-table td {
+        padding: 8px 9px;
+        border: 1px solid #d4dce6;
+        color: #26374b;
+    }
+
+    .lvs-page ::deep .article-table tbody tr {
+        background: #fff;
+        cursor: pointer;
+    }
+
+        .lvs-page ::deep .article-table tbody tr:nth-child(even) {
+            background: #f1f5fa;
+        }
+
+        .lvs-page ::deep .article-table tbody tr:hover {
+            background: #e0edfb;
+        }
+
+        .lvs-page ::deep .article-table tbody tr.selected-row {
+            background: #c9def5;
+        }
+
+.lvs-page ::deep .status-low,
+.lvs-page ::deep .status-available {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.lvs-page ::deep .status-available {
+    background: #d8edda;
+    color: #276337;
+    border: 1px solid #b5d9b9;
+}
+
+.lvs-page ::deep .status-low {
+    background: #fff0cf;
+    color: #8b5b00;
+    border: 1px solid #ecd49e;
+}
+
+.lvs-page ::deep .delete-button {
+    border: 1px solid #aebac9;
+    border-radius: 3px;
+    height: auto;
+    padding: 5px 9px;
+    color: #9b3030;
+    background: #fff;
+    cursor: pointer;
+}
+
+    .lvs-page ::deep .delete-button:hover {
+        background: #fce6e6;
+        border-color: #c87878;
+    }
+
+.lvs-page ::deep .empty-state {
+    padding: 25px;
+    text-align: center;
+    color: #758397;
+}
+
+/* Article Details Component */
+
+.lvs-page ::deep .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 15px;
+}
+
+.lvs-page ::deep .detail-section {
+    border: 1px solid #cbd4df;
+    background: white;
+}
+
+    .lvs-page ::deep .detail-section h3 {
+        margin: 0;
+        padding: 9px 12px;
+        font-size: 14px;
+        color: #17477c;
+        background: #e8eef7;
+        border-bottom: 1px solid #cbd4df;
+    }
+
+.lvs-page ::deep .detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+    .lvs-page ::deep .detail-row span {
+        font-weight: bold;
+        color: #35465b;
+    }
+
+    .lvs-page ::deep .detail-row strong {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+/* Footer */
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    color: #8491a1;
+    padding: 8px 18px;
+    font-size: 11px;
+}
+
+/* Responsive Layout */
+
+@media (max-width: 800px) {
+    .topbar {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+    }
+
+        .topbar nav {
+            flex-wrap: wrap;
+        }
+
+    .lvs-page ::deep .details-grid {
+        grid-template-columns: 1fr;
+    }
+}

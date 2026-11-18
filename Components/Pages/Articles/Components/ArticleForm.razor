@@ -1,0 +1,132 @@
+﻿<h3>ArticleForm</h3>
+
+@code {
+
+}
+
+@using LVS.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm Model="article" OnSubmit="HandleSubmit">
+    <div class="article-form">
+
+        <div class="form-heading">
+            <h3>New Article</h3>
+            <p>Enter the article master data</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="form-error">@errorMessage</div>
+        }
+
+        <div class="form-grid">
+
+            <div class="form-field">
+                <label>Article Number *</label>
+                <InputText @bind-Value="article.ArticleNumber"
+                           placeholder="Enter article number..." />
+            </div>
+
+            <div class="form-field">
+                <label>Article Name *</label>
+                <InputText @bind-Value="article.ArticleName"
+                           placeholder="Enter article name..." />
+            </div>
+
+            <div class="form-field">
+                <label>Brand</label>
+                <InputText @bind-Value="article.Brand"
+                           placeholder="Enter brand..." />
+            </div>
+
+            <div class="form-field">
+                <label>EAN</label>
+                <InputText @bind-Value="article.EAN"
+                           placeholder="Enter EAN..." />
+            </div>
+
+            <div class="form-field">
+                <label>Unit *</label>
+                <InputText @bind-Value="article.Unit"
+                           placeholder="e.g. Stück, kg, m..." />
+            </div>
+
+            <div class="form-field">
+                <label>Minimum Stock</label>
+                <InputNumber @bind-Value="article.MinimumStock" />
+            </div>
+
+            <div class="form-field">
+                <label>Maximum Stock</label>
+                <InputNumber @bind-Value="article.MaximumStock" />
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="button"
+                    class="secondary-button"
+                    @onclick="OnCancel">
+                Cancel
+            </button>
+
+            <button type="submit" class="primary-button">
+                Create Article
+            </button>
+        </div>
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<Article> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private Article article = new()
+    {
+        TotalStock = 0
+    };
+
+    private string errorMessage = "";
+
+    private async Task HandleSubmit(EditContext context)
+    {
+        errorMessage = "";
+
+        if (string.IsNullOrWhiteSpace(article.ArticleNumber))
+        {
+            errorMessage = "Article number is required.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(article.ArticleName))
+        {
+            errorMessage = "Article name is required.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(article.Unit))
+        {
+            errorMessage = "Unit is required.";
+            return;
+        }
+
+        if (article.MinimumStock < 0 || article.MaximumStock < 0)
+        {
+            errorMessage = "Stock limits cannot be negative.";
+            return;
+        }
+
+        if (article.MaximumStock < article.MinimumStock)
+        {
+            errorMessage = "Maximum stock cannot be lower than minimum stock.";
+            return;
+        }
+
+        await OnSave.InvokeAsync(article);
+    }
+}

@@ -11,7 +11,7 @@ namespace LVS.Services
     {
         private readonly WarehouseDbContext _context;
 
-        
+
 
         public ArticleService(WarehouseDbContext context)
         {
@@ -25,8 +25,8 @@ namespace LVS.Services
 
         public async Task<Article?> GetByIdAsync(int id)
         {
-            Article? article = await _context.Articles.FindAsync(id);  
-            
+            Article? article = await _context.Articles.FindAsync(id);
+
             return article;
         }
 
@@ -55,9 +55,9 @@ namespace LVS.Services
             await _context.SaveChangesAsync();
             return true;
         }
-         
-        public async Task<bool> UpdateAsync(Article article) /*Inventory levels should not simply be modified via `UpdateAsync()` 
-                                                               Instead dedicated methods such as `ReceiveGoodsAsync()` or `IssueGoodsAsync()` should be used for this purpose.*/
+
+        public async Task<bool> UpdateAsync(Article article) /*Inventory levels should not simply be modified via UpdateAsync()
+                                                               Instead dedicated methods such as ReceiveGoodsAsync() or IssueGoodsAsync( should be used for this purpose*/
         {
             Article? existingArticle = await GetByIdAsync(article.Id);
             if (existingArticle == null)
@@ -114,8 +114,8 @@ namespace LVS.Services
             await _context.SaveChangesAsync();
             return articles;
         }
-           
-        
+
+
+
     }
 }
-  
